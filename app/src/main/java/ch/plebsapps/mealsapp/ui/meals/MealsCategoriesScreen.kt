@@ -25,19 +25,19 @@ import ch.plebsapps.mealsapp.ui.theme.MealsAppTheme
 import coil.compose.rememberImagePainter
 
 @Composable
-fun MealsCategoriesScreen() {
+fun MealsCategoriesScreen(navigationCallback: (String) -> Unit) {
     val viewModel: MealsCategoriesViewModel = viewModel()
     val meals = viewModel.mealsState.value
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         items(meals) { meal ->
-            MealCategory(meal)
+            MealCategory(meal, navigationCallback)
         }
     }
 }
 
 @Composable
-fun MealCategory(meal: MealsResponse) {
+fun MealCategory(meal: MealsResponse, navigationCallback: (String) -> Unit) {
     
     var isExpanded by remember { mutableStateOf(false) }
     
@@ -48,6 +48,9 @@ fun MealCategory(meal: MealsResponse) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
+            .clickable {
+                navigationCallback(meal.id)
+            }
     ) {
         Row(modifier = Modifier.animateContentSize() ) {
             Image(
@@ -95,6 +98,6 @@ fun MealCategory(meal: MealsResponse) {
 @Composable
 fun DefaultPreview() {
     MealsAppTheme {
-        MealsCategoriesScreen()
+        MealsCategoriesScreen({})
     }
 }
